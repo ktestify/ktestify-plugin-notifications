@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 
 - Spotless apply — [@nil-malh](https://github.com/nil-malh)
 
+- Update cliff.toml and pom.xml for repository name change and description improvement — [@nil-malh](https://github.com/nil-malh)
+
 
 ###  New Contributors
 
