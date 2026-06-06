@@ -11,15 +11,14 @@
 
     <!-- Project Coordinates -->
     <groupId>io.github.ktestify</groupId>
-    <artifactId>ktestify-plugin-myplugin</artifactId>
+    <artifactId>ktestify-plugin-notifications</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <!-- Project Information -->
-    <name>ktestify-plugin-myplugin</name>
-    <description>ktestify plugin — MyPlugin transport and Cucumber step definitions</description>
-    <!-- TODO: update URL once the repository is created -->
-    <url>https://github.com/ktestify/ktestify-plugin-myplugin</url>
+    <name>ktestify-plugin-notifications</name>
+    <description>ktestify plugin — cross-platform test suite notifications (Slack, Teams, Webhook)</description>
+    <url>https://github.com/ktestify/ktestify-plugin-notifications</url>
     <inceptionYear>2026</inceptionYear>
 
     <!-- Licenses -->
@@ -34,19 +33,17 @@
     <!-- Developers -->
     <developers>
         <developer>
-            <!-- TODO: fill in your developer details -->
-            <id>lead-developer</id>
-            <name>Your Name</name>
-            <email>your.email@example.com</email>
+            <id>nil-malh</id>
+            <name>Nil MALHOMME</name>
+            <email>malhomme.nil+oss@icloud.com</email>
         </developer>
     </developers>
 
     <!-- SCM Information -->
     <scm>
-        <!-- TODO: update URLs once the repository is created -->
-        <connection>scm:git:git://github.com/ktestify/ktestify-plugin-myplugin.git</connection>
-        <developerConnection>scm:git:ssh://github.com:ktestify/ktestify-plugin-myplugin.git</developerConnection>
-        <url>https://github.com/ktestify/ktestify-plugin-myplugin/tree/main</url>
+        <connection>scm:git:git://github.com/ktestify/ktestify-plugin-notifications.git</connection>
+        <developerConnection>scm:git:ssh://github.com:ktestify/ktestify-plugin-notifications.git</developerConnection>
+        <url>https://github.com/ktestify/ktestify-plugin-notifications/tree/main</url>
     </scm>
 
     <properties>
@@ -58,13 +55,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- =========================================================
-             TODO: Add your transport-specific dependency version here.
-             Example for Amazon S3:
-               <aws.s3.version>2.25.0</aws.s3.version>
-             ========================================================= -->
 
         <!-- Dependency Versions -->
+        <ktestify.version>0.1.0</ktestify.version>
         <cucumber.version>7.34.3</cucumber.version>
         <junit.jupiter.version>6.1.0</junit.jupiter.version>
         <lombok.version>1.18.46</lombok.version>
@@ -93,8 +86,7 @@
         <dependency>
             <groupId>io.github.ktestify</groupId>
             <artifactId>ktestify-core</artifactId>
-            <!-- TODO: update to the actual released version of ktestify-core -->
-            <version>0.1.0</version>
+            <version>${ktestify.version}</version>
         </dependency>
 
         <!-- ===================================== -->
