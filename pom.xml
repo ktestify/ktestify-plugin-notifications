@@ -2,13 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- =========================================================
-         TODO: Replace every occurrence of:
-           • myplugin       → your plugin short name in lowercase (e.g. s3, ibmmq, sftp)
-           • my-plugin      → your plugin kebab-case ID         (e.g. s3, ibm-mq, sftp)
-           • MyPlugin       → your plugin PascalCase name       (e.g. S3, IbmMq, Sftp)
-         ========================================================= -->
-
     <!-- Project Coordinates -->
     <groupId>io.github.ktestify</groupId>
     <artifactId>ktestify-plugin-notifications</artifactId>
@@ -17,7 +10,7 @@
 
     <!-- Project Information -->
     <name>ktestify-plugin-notifications</name>
-    <description>ktestify plugin — cross-platform test suite notifications (Slack, Teams, Webhook)</description>
+    <description>KTestify plugin Cucumber test suite notifications (Slack, Teams, Webhooks)</description>
     <url>https://github.com/ktestify/ktestify-plugin-notifications</url>
     <inceptionYear>2026</inceptionYear>
 
@@ -147,25 +140,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- ===================================== -->
-        <!-- Testcontainers                        -->
-        <!-- TODO: add the module for your tech    -->
-        <!-- e.g. testcontainers-localstack for S3 -->
-        <!-- ===================================== -->
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers-junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- Log4j2 for tests -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -227,6 +201,14 @@
                     <doclint>none</doclint>
                     <quiet>true</quiet>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- JaCoCo -->

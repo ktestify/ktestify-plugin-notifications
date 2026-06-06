@@ -1,5 +1,5 @@
 # ============================================================
-# Release — Publish to Maven Central + GHCR
+# Release — Publish to Maven Central
 #
 # Workflow:
 #   1. Developer triggers this workflow manually and provides:
@@ -9,9 +9,8 @@
 #   3. Full build runs with the `release` Maven profile
 #      (GPG signing + central-publishing-maven-plugin).
 #   4. Artifact is published to Maven Central.
-#   5. Docker image is built & pushed to GHCR via JIB.
-#   6. Git is tagged and pom.xml is bumped to next SNAPSHOT.
-#   7. A GitHub Release is created with auto-generated notes.
+#   5. Git is tagged and pom.xml is bumped to next SNAPSHOT.
+#   6. A GitHub Release is created with auto-generated notes.
 #
 # Required secrets (set in Settings → Secrets → Actions):
 #   KTESTIFY_CHANGELOG_PAT — PAT with repo scope; used for checkout, git push,
@@ -21,10 +20,6 @@
 #   CENTRAL_PASSWORD    — Maven Central Portal password token
 #   GPG_PRIVATE_KEY     — ASCII-armored GPG private key
 #   GPG_PASSPHRASE      — Passphrase for the GPG key
-#
-# Note: GITHUB_TOKEN (packages:write) is still used for GHCR authentication
-#       in the JIB step — pushing to a registry does not require bypassing
-#       the main branch ruleset.
 #
 # The job runs inside a `release` GitHub Environment so a
 # mandatory approval gate can be configured there.
@@ -49,6 +44,9 @@ on:
         type: choice
         options: [ "false", "true" ]
 
+# FIX 1: Single permissions block — workflow-level removed, declared once at job level.
+# pull-requests: read is retained for git-cliff PR metadata fetching.
+
 env:
   JAVA_VERSION: "25"
   MAVEN_OPTS: "-Xmx2048m -XX:+EnableDynamicAgentLoading"
@@ -61,13 +59,12 @@ jobs:
     environment: release
     permissions:
       contents: read        # KTESTIFY_CHANGELOG_PAT handles all writes to main
-      packages: write       # push Docker image to GHCR (GITHUB_TOKEN used in JIB step)
       id-token: write       # OIDC token for Maven Central trusted publishing
       pull-requests: read   # git-cliff: fetch PR metadata for changelog
 
     steps:
       # ── Input validation ──────────────────────────────────
-      # Catch malformed versions before they touch git or pom.xml.
+      # IMPROVEMENT: Catch malformed versions before they touch git or pom.xml.
       - name: Validate version inputs
         run: |
           if [[ ! "${{ inputs.release-version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -99,10 +96,18 @@ jobs:
           server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
-      # ── Set release version ───────────────────────────────
+      # ── GPG ───────────────────────────────────────────────
+      - name: Import GPG signing key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | \
+            gpg --batch --import --no-tty
+          KEY_FPR=$(gpg --list-secret-keys --with-colons 2>/dev/null \
+                   | awk -F: '/^fpr/{print $10; exit}')
+          echo "${KEY_FPR}:6:" | gpg --import-ownertrust --batch --no-tty
+          echo "Imported key fingerprint: ${KEY_FPR}"
+
+      # ── Set release version ───────────────────────────────────
       - name: Set pom.xml to release version ${{ inputs.release-version }}
         run: |
           mvn versions:set \
@@ -128,9 +133,11 @@ jobs:
           echo "README.md updated → ${RELEASE_VERSION}"
           grep -E "badge/version|<version>" README.md | head -5
 
-      # ── Build, test & sign ────────────────────────────────
-      # GPG passphrase passed as step-level env var (not CLI arg) to avoid
-      # exposing it in `ps` output and runner debug logs.
+      # ── Build, test & sign ────────────────────────────────────
+      # FIX 2: GPG passphrase moved from CLI arg to step-level env var.
+      # Passing secrets as Maven -D flags exposes them in `ps` output and
+      # runner debug logs. The shell variable ${GPG_PASSPHRASE} is expanded
+      # at runtime without embedding the secret value in the command string.
       - name: Build with release profile (compile + test + GPG sign)
         run: |
           mvn verify -P release \
@@ -140,7 +147,7 @@ jobs:
           TESTCONTAINERS_RYUK_DISABLED: "true"
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      # ── Publish to Maven Central ──────────────────────────
+      # ── Publish ───────────────────────────────────────────
       - name: Publish to Maven Central
         if: inputs.dry-run == 'false'
         run: |
@@ -153,45 +160,13 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      # ── Publish Docker image to GHCR ─────────────────────
-      # JIB builds + pushes directly from the compiled classes —
-      # no local Docker daemon required.
-      # Tags pushed:
-      #   ghcr.io/ktestify/ktestify-cucumber:<release-version>
-      #   ghcr.io/ktestify/ktestify-cucumber:latest
-      # GITHUB_TOKEN (packages:write) is used here — pushing to GHCR
-      # does not require bypassing the main branch ruleset.
-      - name: Publish Docker image to GHCR
-        if: inputs.dry-run == 'false'
-        run: |
-          mvn jib:build \
-            --no-transfer-progress \
-            -Dspotless.check.skip=true \
-            -Djib.to.auth.username=${{ github.actor }} \
-            -Djib.to.auth.password=${{ secrets.GITHUB_TOKEN }}
-        env:
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Docker image summary
-        if: inputs.dry-run == 'false'
-        run: |
-          echo "### Docker image published" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Tag | Image |" >> $GITHUB_STEP_SUMMARY
-          echo "|:----|:------|" >> $GITHUB_STEP_SUMMARY
-          echo "| ${{ inputs.release-version }} | ghcr.io/ktestify/ktestify-cucumber:${{ inputs.release-version }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| latest | ghcr.io/ktestify/ktestify-cucumber:latest |" >> $GITHUB_STEP_SUMMARY
-
       # ── Commit, tag & push ────────────────────────────────
-      # Push IMMEDIATELY after tagging so the new commit SHA exists on GitHub
-      # before git-cliff calls the GitHub API in the next step.
       - name: Commit release version, tag & push
         if: inputs.dry-run == 'false'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add pom.xml
-          git add README.md
+          git add pom.xml README.md
           git commit -m "chore(release): prepare release ${{ inputs.release-version }} [skip ci]"
           git tag -a "v${{ inputs.release-version }}" \
             -m "Release ${{ inputs.release-version }}"
@@ -247,30 +222,25 @@ jobs:
           git push origin main
 
       # ── GitHub Release ────────────────────────────────────
-      # File names are fixed (no version suffix) because pom.xml sets
-      # project.build.finalName = ktestify-cucumber.
       - name: Create GitHub Release
         if: inputs.dry-run == 'false'
         uses: softprops/action-gh-release@v3
         with:
           token: ${{ secrets.KTESTIFY_CHANGELOG_PAT }}
           tag_name: v${{ inputs.release-version }}
-          name: "ktestify-cucumber ${{ inputs.release-version }}"
+          name: "ktestify ${{ inputs.release-version }}"
           body_path: RELEASE_NOTES.md
           draft: false
           prerelease: false
           files: |
-            target/ktestify-cucumber.jar
-            target/ktestify-cucumber-sources.jar
-            target/ktestify-cucumber-javadoc.jar
-            target/jib-image.digest
+            target/ktestify-core.jar
+            target/ktestify-core-sources.jar
+            target/ktestify-core-javadoc.jar
 
-      # ── Rollback on failure ────────────────────────────────
+      # ── FIX 3: Rollback on failure ────────────────────────
       # Runs only when a previous step has failed AND this is not a dry-run.
       # At this point the tag may or may not have been pushed depending on
       # which step failed. Both cases are handled safely.
-      # Note: a Docker image already pushed to GHCR cannot be automatically
-      # retracted — delete it manually in the GitHub Packages UI if needed.
       - name: Rollback on failure
         if: failure() && inputs.dry-run == 'false'
         run: |
@@ -312,7 +282,7 @@ jobs:
           echo "✅ Dry-run complete — artifacts were built & signed."
           echo "   Release version : ${{ inputs.release-version }}"
           echo "   Next SNAPSHOT   : ${{ inputs.next-snapshot-version }}"
-          echo "   Nothing was published, tagged, pushed, or pushed to GHCR."
+          echo "   Nothing was published, tagged, or pushed."
           echo ""
           echo "📋 Release notes preview:"
           cat RELEASE_NOTES_DRYRUN.md

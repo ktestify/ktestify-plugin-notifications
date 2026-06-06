@@ -1,11 +1,10 @@
 # cliff.toml — git-cliff changelog configuration
 # Docs: https://git-cliff.org/docs/configuration
-# TODO: Replace 'ktestify-plugin-myplugin' with your actual repository name.
 
 # ── GitHub integration ─────────────────────────────────────────────────────────
 [remote.github]
 owner = "ktestify"
-repo  = "ktestify-plugin-myplugin"
+repo  = "ktestify-plugin-notifications"
 
 # ── Changelog layout ──────────────────────────────────────────────────────────
 [changelog]
@@ -80,7 +79,7 @@ topo_order               = false
 sort_commits             = "oldest"
 
 link_parsers = [
-    { pattern = "#(\\d+)", href = "https://github.com/ktestify/ktestify-plugin-myplugin/issues/$1" },
+    { pattern = "#(\\d+)", href = "https://github.com/ktestify/ktestify-plugin-notifications/issues/$1" },
 ]
 
 # ── Automatic version bumping ─────────────────────────────────────────────────
