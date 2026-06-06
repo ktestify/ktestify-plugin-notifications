@@ -22,15 +22,15 @@ import lombok.Value;
  * Aggregated result for one Cucumber tag group within a suite run.
  *
  * <p>Created by {@link io.github.ktestify.notifications.service.ScenarioAggregator} for each group configured in
- * {@code ktestify.plugins.notifications.groups}, plus an automatic {@code "Untagged"} group for scenarios that match
- * no configured tag.
+ * {@code ktestify.plugins.notifications.groups}, plus an automatic {@code "Untagged"} group for scenarios that match no
+ * configured tag.
  *
  * <p>The {@link #style} field maps the success rate to a visual style for card templates:
  *
  * <ul>
- *   <li>{@code "good"},  success rate ≥ {@code thresholds.good} (default 75 %)
- *   <li>{@code "warning"},  success rate ≥ {@code thresholds.warning} (default 50 %)
- *   <li>{@code "attention"},  success rate < {@code thresholds.warning}
+ *   <li>{@code "good"}, success rate ≥ {@code thresholds.good} (default 75 %)
+ *   <li>{@code "warning"}, success rate ≥ {@code thresholds.warning} (default 50 %)
+ *   <li>{@code "attention"}, success rate < {@code thresholds.warning}
  * </ul>
  *
  * @since 1.0.0
@@ -61,8 +61,8 @@ public class GroupResult {
     int skippedCount;
 
     /**
-     * Success rate as an integer percentage (0–100). Computed as
-     * {@code (passedCount / totalCount) * 100}, rounded down.
+     * Success rate as an integer percentage (0–100). Computed as {@code (passedCount / totalCount) * 100}, rounded
+     * down.
      */
     int successRate;
 
@@ -72,4 +72,3 @@ public class GroupResult {
      */
     String style;
 }
-

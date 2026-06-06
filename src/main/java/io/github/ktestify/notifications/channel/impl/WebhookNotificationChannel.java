@@ -68,9 +68,8 @@ public class WebhookNotificationChannel implements NotificationChannel {
     public WebhookNotificationChannel(ChannelConfig config, NotificationsConfig globalConfig) {
         this.config = config;
         this.globalConfig = globalConfig;
-        this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .build();
+        this.httpClient =
+                HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
     }
 
     @Override
@@ -88,9 +87,8 @@ public class WebhookNotificationChannel implements NotificationChannel {
         try {
             String payload = NotificationTemplateEngine.renderSuite(event, config, globalConfig);
 
-            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .timeout(Duration.ofSeconds(30));
+            HttpRequest.Builder requestBuilder =
+                    HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(30));
 
             // Apply custom headers
             Map<String, String> headers = config.getHeaders();
@@ -106,7 +104,8 @@ public class WebhookNotificationChannel implements NotificationChannel {
                     HttpRequest.BodyPublishers.ofString(payload.trim(), StandardCharsets.UTF_8);
             requestBuilder.method(method, body);
 
-            HttpResponse<String> response = httpClient.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response =
+                    httpClient.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
             LOG.info("[webhook] Notification sent to {} (HTTP {}).", url, response.statusCode());
 
             if (response.statusCode() >= 400) {
@@ -128,4 +127,3 @@ public class WebhookNotificationChannel implements NotificationChannel {
         return false;
     }
 }
-

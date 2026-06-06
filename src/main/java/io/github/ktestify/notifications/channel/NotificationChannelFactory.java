@@ -43,8 +43,8 @@ import org.slf4j.LoggerFactory;
  * <h2>Custom channels via SPI</h2>
  *
  * <p>Third-party implementations registered via {@link ServiceLoader} (in
- * {@code META-INF/services/io.github.ktestify.notifications.channel.NotificationChannel}) are discovered at startup
- * and matched to channel config blocks by {@code type}.
+ * {@code META-INF/services/io.github.ktestify.notifications.channel.NotificationChannel}) are discovered at startup and
+ * matched to channel config blocks by {@code type}.
  *
  * @since 1.0.0
  */
@@ -60,7 +60,7 @@ public final class NotificationChannelFactory {
      * <p>Only channels with {@code enabled = true} in their config block are instantiated.
      *
      * @param config the root notifications config
-     * @return ordered list of active channels,  never {@code null}, may be empty
+     * @return ordered list of active channels, never {@code null}, may be empty
      */
     public static List<NotificationChannel> build(NotificationsConfig config) {
         // Discover SPI-registered custom channels
@@ -104,16 +104,16 @@ public final class NotificationChannelFactory {
     private static List<NotificationChannel> discoverSpiChannels() {
         List<NotificationChannel> discovered = new ArrayList<>();
         try {
-            ServiceLoader.load(NotificationChannel.class)
-                    .forEach(channel -> {
-                        discovered.add(channel);
-                        LOG.debug("SPI channel discovered: {} (type={})",
-                                channel.getClass().getName(), channel.getType());
-                    });
+            ServiceLoader.load(NotificationChannel.class).forEach(channel -> {
+                discovered.add(channel);
+                LOG.debug(
+                        "SPI channel discovered: {} (type={})",
+                        channel.getClass().getName(),
+                        channel.getType());
+            });
         } catch (Exception e) {
             LOG.debug("SPI channel discovery failed: {}", e.getMessage());
         }
         return discovered;
     }
 }
-

@@ -40,4 +40,3 @@ public class CiContext {
     /** Build or pipeline number (e.g. {@code "1234"}). May be {@code null}. */
     String buildNumber;
 }
-

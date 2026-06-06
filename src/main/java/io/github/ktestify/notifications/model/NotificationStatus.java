@@ -33,4 +33,3 @@ public enum NotificationStatus {
     /** Scenario was skipped (step marked {@code @Pending}, or step undefined). */
     SKIPPED
 }
-

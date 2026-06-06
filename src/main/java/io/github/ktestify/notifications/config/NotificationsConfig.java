@@ -52,8 +52,10 @@ public final class NotificationsConfig {
         this.onFailureOnly = cfg.getBoolean("on-failure-only");
         this.suite = new SuiteConfig(cfg.getConfig("suite"));
         this.thresholds = new ThresholdsConfig(cfg.getConfig("thresholds"));
-        this.groups = cfg.getConfigList("groups").stream().map(TagGroupConfig::from).toList();
-        this.channels = cfg.getConfigList("channels").stream().map(ChannelConfig::from).toList();
+        this.groups =
+                cfg.getConfigList("groups").stream().map(TagGroupConfig::from).toList();
+        this.channels =
+                cfg.getConfigList("channels").stream().map(ChannelConfig::from).toList();
     }
 
     /**
@@ -76,4 +78,3 @@ public final class NotificationsConfig {
         return channels.stream().filter(ChannelConfig::isEnabled).toList();
     }
 }
-

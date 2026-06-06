@@ -22,7 +22,6 @@ import io.github.ktestify.config.KtestifyConfig;
 import io.github.ktestify.notifications.TestFixtures;
 import io.github.ktestify.notifications.config.ChannelConfig;
 import io.github.ktestify.notifications.config.NotificationsConfig;
-import io.github.ktestify.notifications.model.SuiteEvent;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,8 +39,7 @@ class NotificationTemplateEngineTest {
         @Test
         @DisplayName("replaces a single variable")
         void singleVariable() {
-            String result = NotificationTemplateEngine.substitute(
-                    "Hello {{name}}!", Map.of("name", "ktestify"));
+            String result = NotificationTemplateEngine.substitute("Hello {{name}}!", Map.of("name", "ktestify"));
             assertEquals("Hello ktestify!", result);
         }
 
@@ -56,8 +54,7 @@ class NotificationTemplateEngineTest {
         @Test
         @DisplayName("unknown variables are replaced with empty string")
         void unknownVariableBecomesEmpty() {
-            String result = NotificationTemplateEngine.substitute(
-                    "{{known}} {{unknown}}", Map.of("known", "hello"));
+            String result = NotificationTemplateEngine.substitute("{{known}} {{unknown}}", Map.of("known", "hello"));
             assertEquals("hello ", result);
         }
 
@@ -212,10 +209,9 @@ class NotificationTemplateEngineTest {
         @Test
         @DisplayName("renders a non-blank result for PASSED suite with Teams channel")
         void teamsPassedSuiteNonBlank() {
-            ChannelConfig cfg = ChannelConfig.from(
-                    ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
-            String result = NotificationTemplateEngine.renderSuite(
-                    TestFixtures.passedSuite(), cfg, defaultConfig);
+            ChannelConfig cfg =
+                    ChannelConfig.from(ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
+            String result = NotificationTemplateEngine.renderSuite(TestFixtures.passedSuite(), cfg, defaultConfig);
             assertNotNull(result);
             assertFalse(result.isBlank());
         }
@@ -223,40 +219,37 @@ class NotificationTemplateEngineTest {
         @Test
         @DisplayName("renders a non-blank result for FAILED suite with Slack channel")
         void slackFailedSuiteNonBlank() {
-            ChannelConfig cfg = ChannelConfig.from(
-                    ConfigFactory.parseString("type=\"slack\", enabled=true, webhook-url=\"\""));
-            String result = NotificationTemplateEngine.renderSuite(
-                    TestFixtures.failedSuite(), cfg, defaultConfig);
+            ChannelConfig cfg =
+                    ChannelConfig.from(ConfigFactory.parseString("type=\"slack\", enabled=true, webhook-url=\"\""));
+            String result = NotificationTemplateEngine.renderSuite(TestFixtures.failedSuite(), cfg, defaultConfig);
             assertFalse(result.isBlank());
         }
 
         @Test
         @DisplayName("suite name is injected into rendered Teams output")
         void suiteNameInjected() {
-            ChannelConfig cfg = ChannelConfig.from(
-                    ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
-            String result = NotificationTemplateEngine.renderSuite(
-                    TestFixtures.passedSuite(), cfg, defaultConfig);
+            ChannelConfig cfg =
+                    ChannelConfig.from(ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
+            String result = NotificationTemplateEngine.renderSuite(TestFixtures.passedSuite(), cfg, defaultConfig);
             assertTrue(result.contains("Test Suite"), "Expected suite name in output");
         }
 
         @Test
         @DisplayName("success rate is injected into rendered output")
         void successRateInjected() {
-            ChannelConfig cfg = ChannelConfig.from(
-                    ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
-            String result = NotificationTemplateEngine.renderSuite(
-                    TestFixtures.passedSuite(), cfg, defaultConfig);
+            ChannelConfig cfg =
+                    ChannelConfig.from(ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
+            String result = NotificationTemplateEngine.renderSuite(TestFixtures.passedSuite(), cfg, defaultConfig);
             assertTrue(result.contains("100"), "Expected successRate=100 in output");
         }
 
         @Test
         @DisplayName("group sections are rendered and injected when groups are present")
         void groupSectionsInjected() {
-            ChannelConfig cfg = ChannelConfig.from(
-                    ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
-            String result = NotificationTemplateEngine.renderSuite(
-                    TestFixtures.failedSuiteWithGroups(), cfg, defaultConfig);
+            ChannelConfig cfg =
+                    ChannelConfig.from(ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
+            String result =
+                    NotificationTemplateEngine.renderSuite(TestFixtures.failedSuiteWithGroups(), cfg, defaultConfig);
             // Both group labels should appear in the output
             assertTrue(result.contains("Orders"), "Expected 'Orders' group in output");
             assertTrue(result.contains("Payments"), "Expected 'Payments' group in output");
@@ -265,30 +258,29 @@ class NotificationTemplateEngineTest {
         @Test
         @DisplayName("CI context variables are injected when present")
         void ciContextInjected() {
-            ChannelConfig cfg = ChannelConfig.from(
-                    ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
-            String result = NotificationTemplateEngine.renderSuite(
-                    TestFixtures.failedSuiteWithGroups(), cfg, defaultConfig);
+            ChannelConfig cfg =
+                    ChannelConfig.from(ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
+            String result =
+                    NotificationTemplateEngine.renderSuite(TestFixtures.failedSuiteWithGroups(), cfg, defaultConfig);
             assertTrue(result.contains("GitHub Actions"), "Expected CI name in output");
         }
 
         @Test
         @DisplayName("git branch is injected when present")
         void gitBranchInjected() {
-            ChannelConfig cfg = ChannelConfig.from(
-                    ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
-            String result = NotificationTemplateEngine.renderSuite(
-                    TestFixtures.failedSuiteWithGroups(), cfg, defaultConfig);
+            ChannelConfig cfg =
+                    ChannelConfig.from(ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
+            String result =
+                    NotificationTemplateEngine.renderSuite(TestFixtures.failedSuiteWithGroups(), cfg, defaultConfig);
             assertTrue(result.contains("main"), "Expected git branch in output");
         }
 
         @Test
         @DisplayName("renders correctly with null CI and Git context (shows N/A)")
         void nullCiAndGitRendersNA() {
-            ChannelConfig cfg = ChannelConfig.from(
-                    ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
-            String result = NotificationTemplateEngine.renderSuite(
-                    TestFixtures.passedSuite(), cfg, defaultConfig);
+            ChannelConfig cfg =
+                    ChannelConfig.from(ConfigFactory.parseString("type=\"teams\", enabled=true, webhook-url=\"\""));
+            String result = NotificationTemplateEngine.renderSuite(TestFixtures.passedSuite(), cfg, defaultConfig);
             // CI name defaults to N/A when no CI context
             assertTrue(result.contains("N/A"), "Expected N/A for missing CI context");
         }
@@ -296,10 +288,9 @@ class NotificationTemplateEngineTest {
         @Test
         @DisplayName("renders correctly with Webhook channel")
         void webhookChannelRenders() {
-            ChannelConfig cfg = ChannelConfig.from(
-                    ConfigFactory.parseString("type=\"webhook\", enabled=true, url=\"\""));
-            String result = NotificationTemplateEngine.renderSuite(
-                    TestFixtures.failedSuite(), cfg, defaultConfig);
+            ChannelConfig cfg =
+                    ChannelConfig.from(ConfigFactory.parseString("type=\"webhook\", enabled=true, url=\"\""));
+            String result = NotificationTemplateEngine.renderSuite(TestFixtures.failedSuite(), cfg, defaultConfig);
             assertFalse(result.isBlank());
             assertTrue(result.contains("FAILED"));
         }
@@ -317,8 +308,7 @@ class NotificationTemplateEngineTest {
                       footer = ""
                     }
                     """));
-            String result = NotificationTemplateEngine.renderSuite(
-                    TestFixtures.passedSuite(), cfg, defaultConfig);
+            String result = NotificationTemplateEngine.renderSuite(TestFixtures.passedSuite(), cfg, defaultConfig);
             assertEquals("STATUS=PASSED SUITE=Test Suite", result);
         }
     }
@@ -347,12 +337,8 @@ class NotificationTemplateEngineTest {
         @Test
         @DisplayName("placeholder appearing multiple times is replaced everywhere")
         void multipleOccurrences() {
-            String result = NotificationTemplateEngine.substitute(
-                    "{{x}}-{{x}}-{{x}}", Map.of("x", "A"));
+            String result = NotificationTemplateEngine.substitute("{{x}}-{{x}}-{{x}}", Map.of("x", "A"));
             assertEquals("A-A-A", result);
         }
     }
 }
-
-
-

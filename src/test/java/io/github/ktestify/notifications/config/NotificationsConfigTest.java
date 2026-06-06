@@ -32,14 +32,16 @@ class NotificationsConfigTest {
     @Test
     @DisplayName("defaults: plugin is disabled out of the box")
     void defaultsPluginDisabled() {
-        NotificationsConfig cfg = NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
+        NotificationsConfig cfg =
+                NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
         assertFalse(cfg.isEnabled());
     }
 
     @Test
     @DisplayName("defaults: thresholds are 75 / 50")
     void defaultThresholds() {
-        NotificationsConfig cfg = NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
+        NotificationsConfig cfg =
+                NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
         assertEquals(75, cfg.getThresholds().getGood());
         assertEquals(50, cfg.getThresholds().getWarning());
     }
@@ -47,7 +49,8 @@ class NotificationsConfigTest {
     @Test
     @DisplayName("defaults: log channel enabled, zero other channels")
     void defaultChannels() {
-        NotificationsConfig cfg = NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
+        NotificationsConfig cfg =
+                NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
         assertEquals(1, cfg.getEnabledChannels().size());
         assertEquals("log", cfg.getEnabledChannels().get(0).getType());
     }
@@ -55,15 +58,16 @@ class NotificationsConfigTest {
     @Test
     @DisplayName("defaults: groups list is empty")
     void defaultGroupsEmpty() {
-        NotificationsConfig cfg = NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
+        NotificationsConfig cfg =
+                NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
         assertTrue(cfg.getGroups().isEmpty());
     }
 
     @Test
     @DisplayName("enabled flag can be overridden")
     void enabledOverride() {
-        KtestifyConfig config = KtestifyConfig.load(
-                ConfigFactory.parseString("ktestify.plugins.notifications.enabled = true"));
+        KtestifyConfig config =
+                KtestifyConfig.load(ConfigFactory.parseString("ktestify.plugins.notifications.enabled = true"));
         NotificationsConfig cfg = NotificationsConfig.from(config.getRaw());
         assertTrue(cfg.isEnabled());
     }
@@ -122,15 +126,38 @@ class NotificationsConfigTest {
         @BeforeEach
         void setUp() {
             KtestifyConfig.reset();
-            thresholds = NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw()).getThresholds();
+            thresholds = NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw())
+                    .getThresholds();
         }
 
-        @Test void rateAbove75IsGood() { assertEquals("good", thresholds.computeStyle(100)); }
-        @Test void rateAt75IsGood() { assertEquals("good", thresholds.computeStyle(75)); }
-        @Test void rateBetween50And74IsWarning() { assertEquals("warning", thresholds.computeStyle(60)); }
-        @Test void rateAt50IsWarning() { assertEquals("warning", thresholds.computeStyle(50)); }
-        @Test void rateBelow50IsAttention() { assertEquals("attention", thresholds.computeStyle(49)); }
-        @Test void rateZeroIsAttention() { assertEquals("attention", thresholds.computeStyle(0)); }
+        @Test
+        void rateAbove75IsGood() {
+            assertEquals("good", thresholds.computeStyle(100));
+        }
+
+        @Test
+        void rateAt75IsGood() {
+            assertEquals("good", thresholds.computeStyle(75));
+        }
+
+        @Test
+        void rateBetween50And74IsWarning() {
+            assertEquals("warning", thresholds.computeStyle(60));
+        }
+
+        @Test
+        void rateAt50IsWarning() {
+            assertEquals("warning", thresholds.computeStyle(50));
+        }
+
+        @Test
+        void rateBelow50IsAttention() {
+            assertEquals("attention", thresholds.computeStyle(49));
+        }
+
+        @Test
+        void rateZeroIsAttention() {
+            assertEquals("attention", thresholds.computeStyle(0));
+        }
     }
 }
-

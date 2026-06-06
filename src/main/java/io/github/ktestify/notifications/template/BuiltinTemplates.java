@@ -22,19 +22,18 @@ package io.github.ktestify.notifications.template;
  *
  * <h2>Template variable reference</h2>
  *
- * <p>Suite-level variables: {@code {{suiteName}}}, {@code {{environment}}}, {@code {{date}}},
- * {@code {{totalCount}}}, {@code {{passedCount}}}, {@code {{failedCount}}}, {@code {{skippedCount}}},
- * {@code {{successRate}}}, {@code {{overallStyle}}}, {@code {{reportUrl}}}, {@code {{pipelineUrl}}},
- * {@code {{gitBranch}}}, {@code {{gitRevision}}}, {@code {{gitTag}}}, {@code {{buildNumber}}},
- * {@code {{ciName}}}, {@code {{groupSections}}}, {@code {{footer}}}.
+ * <p>Suite-level variables: {@code {{suiteName}}}, {@code {{environment}}}, {@code {{date}}}, {@code {{totalCount}}},
+ * {@code {{passedCount}}}, {@code {{failedCount}}}, {@code {{skippedCount}}}, {@code {{successRate}}},
+ * {@code {{overallStyle}}}, {@code {{reportUrl}}}, {@code {{pipelineUrl}}}, {@code {{gitBranch}}},
+ * {@code {{gitRevision}}}, {@code {{gitTag}}}, {@code {{buildNumber}}}, {@code {{ciName}}}, {@code {{groupSections}}},
+ * {@code {{footer}}}.
  *
- * <p>Group-level variables: {@code {{emoji}}}, {@code {{groupLabel}}}, {@code {{tag}}},
- * {@code {{successRate}}}, {@code {{style}}}, {@code {{passedCount}}}, {@code {{failedCount}}},
- * {@code {{totalCount}}}.
+ * <p>Group-level variables: {@code {{emoji}}}, {@code {{groupLabel}}}, {@code {{tag}}}, {@code {{successRate}}},
+ * {@code {{style}}}, {@code {{passedCount}}}, {@code {{failedCount}}}, {@code {{totalCount}}}.
  *
- * <p>Note on JSON array injection: {@code {{groupSections}}} is replaced with a comma-joined list of
- * rendered group fragments (each ending with a trailing comma if non-empty, enabling valid JSON array
- * construction). {@code {{footer}}} is always the last array element (no trailing comma).
+ * <p>Note on JSON array injection: {@code {{groupSections}}} is replaced with a comma-joined list of rendered group
+ * fragments (each ending with a trailing comma if non-empty, enabling valid JSON array construction).
+ * {@code {{footer}}} is always the last array element (no trailing comma).
  *
  * @since 1.0.0
  */
@@ -187,29 +186,31 @@ public final class BuiltinTemplates {
      * Returns the bundled default template for the given channel type and template slot.
      *
      * @param channelType one of {@code "teams"}, {@code "slack"}, {@code "webhook"}, {@code "log"}
-     * @param slot        one of {@code "suite"}, {@code "group"}, {@code "footer"}
+     * @param slot one of {@code "suite"}, {@code "group"}, {@code "footer"}
      * @return the default template string, or empty string if no default exists
      */
     public static String get(String channelType, String slot) {
         return switch (channelType.toLowerCase()) {
-            case "teams" -> switch (slot) {
-                case "suite" -> TEAMS_SUITE;
-                case "group" -> TEAMS_GROUP;
-                case "footer" -> TEAMS_FOOTER;
-                default -> "";
-            };
-            case "slack" -> switch (slot) {
-                case "suite" -> SLACK_SUITE;
-                case "group" -> SLACK_GROUP;
-                case "footer" -> SLACK_FOOTER;
-                default -> "";
-            };
-            case "webhook" -> switch (slot) {
-                case "suite" -> WEBHOOK_SUITE;
-                default -> "";
-            };
+            case "teams" ->
+                switch (slot) {
+                    case "suite" -> TEAMS_SUITE;
+                    case "group" -> TEAMS_GROUP;
+                    case "footer" -> TEAMS_FOOTER;
+                    default -> "";
+                };
+            case "slack" ->
+                switch (slot) {
+                    case "suite" -> SLACK_SUITE;
+                    case "group" -> SLACK_GROUP;
+                    case "footer" -> SLACK_FOOTER;
+                    default -> "";
+                };
+            case "webhook" ->
+                switch (slot) {
+                    case "suite" -> WEBHOOK_SUITE;
+                    default -> "";
+                };
             default -> "";
         };
     }
 }
-

@@ -34,9 +34,9 @@ import java.util.Map;
 /**
  * Thread-safe static accumulator for {@link ScenarioEvent} instances throughout a test suite run.
  *
- * <p>Called from {@link io.github.ktestify.notifications.hooks.NotificationHooks} {@code @After} hook (concurrent,
- * once per scenario) and read from the {@code @AfterAll} hook (single-threaded, after all scenarios complete) to
- * build the final {@link SuiteEvent}.
+ * <p>Called from {@link io.github.ktestify.notifications.hooks.NotificationHooks} {@code @After} hook (concurrent, once
+ * per scenario) and read from the {@code @AfterAll} hook (single-threaded, after all scenarios complete) to build the
+ * final {@link SuiteEvent}.
  *
  * <h2>Tag-based grouping logic</h2>
  *
@@ -74,8 +74,8 @@ public final class ScenarioAggregator {
      * Builds the {@link SuiteEvent} from all accumulated scenario events.
      *
      * @param config the notifications configuration (suite metadata, thresholds, group definitions)
-     * @param ci     CI platform context (may be {@code null})
-     * @param git    Git repository context (may be {@code null})
+     * @param ci CI platform context (may be {@code null})
+     * @param git Git repository context (may be {@code null})
      * @return the aggregated suite event
      */
     public static SuiteEvent buildSuiteEvent(NotificationsConfig config, CiContext ci, GitContext git) {
@@ -85,7 +85,8 @@ public final class ScenarioAggregator {
         int passed = count(all, NotificationStatus.PASSED);
         int failed = count(all, NotificationStatus.FAILED);
         int skipped = count(all, NotificationStatus.SKIPPED);
-        long totalDurationMs = all.stream().mapToLong(ScenarioEvent::getDurationMs).sum();
+        long totalDurationMs =
+                all.stream().mapToLong(ScenarioEvent::getDurationMs).sum();
         int successRate = total > 0 ? (int) (passed * 100.0 / total) : 100;
 
         ThresholdsConfig thresholds = config.getThresholds();
@@ -113,9 +114,7 @@ public final class ScenarioAggregator {
                 .build();
     }
 
-    /**
-     * Clears all accumulated events. Useful for unit testing.
-     */
+    /** Clears all accumulated events. Useful for unit testing. */
     public static void clear() {
         EVENTS.clear();
     }
@@ -197,4 +196,3 @@ public final class ScenarioAggregator {
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 }
-

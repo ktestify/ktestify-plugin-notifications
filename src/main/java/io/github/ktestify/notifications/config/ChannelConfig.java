@@ -32,10 +32,10 @@ import lombok.Getter;
  * <p>The {@code template} config key can be:
  *
  * <ul>
- *   <li>A string {@code "builtin"},  use the bundled default template for this channel type.
- *   <li>A string {@code "classpath:..."},  load from a classpath resource.
- *   <li>Any other non-blank string,  treat as a filesystem path.
- *   <li>A HOCON object with {@code suite}, {@code group}, {@code footer} keys,  inline triple-quoted strings.
+ *   <li>A string {@code "builtin"}, use the bundled default template for this channel type.
+ *   <li>A string {@code "classpath:..."}, load from a classpath resource.
+ *   <li>Any other non-blank string, treat as a filesystem path.
+ *   <li>A HOCON object with {@code suite}, {@code group}, {@code footer} keys, inline triple-quoted strings.
  * </ul>
  *
  * @since 1.0.0
@@ -127,4 +127,3 @@ public final class ChannelConfig {
         return Collections.unmodifiableMap(map);
     }
 }
-

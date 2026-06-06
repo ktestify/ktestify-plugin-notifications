@@ -61,9 +61,8 @@ public class SlackNotificationChannel implements NotificationChannel {
     public SlackNotificationChannel(ChannelConfig config, NotificationsConfig globalConfig) {
         this.config = config;
         this.globalConfig = globalConfig;
-        this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .build();
+        this.httpClient =
+                HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
     }
 
     @Override
@@ -110,4 +109,3 @@ public class SlackNotificationChannel implements NotificationChannel {
         return false;
     }
 }
-

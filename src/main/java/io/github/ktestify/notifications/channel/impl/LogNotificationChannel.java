@@ -59,18 +59,16 @@ public class LogNotificationChannel implements NotificationChannel {
                 event.getGitContext() != null ? event.getGitContext().getBranch() : "N/A",
                 event.getCiContext() != null ? event.getCiContext().getBuildNumber() : "N/A");
 
-        event.getGroupedResults().forEach(g -> LOG.info(
-                "   {} {},  {}%  ({}/{} passed)",
-                g.getEmoji(),
-                g.getGroupLabel(),
-                g.getSuccessRate(),
-                g.getPassedCount(),
-                g.getTotalCount()));
+        event.getGroupedResults()
+                .forEach(g -> LOG.info(
+                        "   {} {},  {}%  ({}/{} passed)",
+                        g.getEmoji(), g.getGroupLabel(), g.getSuccessRate(), g.getPassedCount(), g.getTotalCount()));
 
         if (!event.getReportUrl().isBlank()) {
             LOG.info("   📊 Report: {}", event.getReportUrl());
         }
-        if (event.getCiContext() != null && event.getCiContext().getPipelineUrl() != null
+        if (event.getCiContext() != null
+                && event.getCiContext().getPipelineUrl() != null
                 && !event.getCiContext().getPipelineUrl().isBlank()) {
             LOG.info("   🔗 Pipeline: {}", event.getCiContext().getPipelineUrl());
         }
@@ -97,4 +95,3 @@ public class LogNotificationChannel implements NotificationChannel {
         return !config.isOnFailureOnly() || event.getStatus() == NotificationStatus.FAILED;
     }
 }
-

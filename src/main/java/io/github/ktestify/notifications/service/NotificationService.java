@@ -43,8 +43,8 @@ import org.slf4j.LoggerFactory;
  *
  * <h2>Shutdown</h2>
  *
- * <p>Call {@link #shutdown(int)} after all notifications have been dispatched (in {@code @AfterAll}) to allow
- * in-flight tasks to complete before the JVM exits.
+ * <p>Call {@link #shutdown(int)} after all notifications have been dispatched (in {@code @AfterAll}) to allow in-flight
+ * tasks to complete before the JVM exits.
  *
  * @since 1.0.0
  */
@@ -103,8 +103,7 @@ public final class NotificationService {
             if (channel.supportsSuite(event, globalOnFailureOnly)) {
                 CompletableFuture.runAsync(() -> channel.sendSuite(event), executor)
                         .exceptionally(t -> {
-                            LOG.warn("Channel {} failed to send suite event: {}",
-                                    channel.getType(), t.getMessage());
+                            LOG.warn("Channel {} failed to send suite event: {}", channel.getType(), t.getMessage());
                             return null;
                         });
             }
@@ -114,8 +113,8 @@ public final class NotificationService {
     /**
      * Dispatches a scenario event asynchronously to all channels that support it.
      *
-     * <p>Most channels return {@code false} from {@link NotificationChannel#supportsScenario} by default, making
-     * this a no-op in standard configurations.
+     * <p>Most channels return {@code false} from {@link NotificationChannel#supportsScenario} by default, making this a
+     * no-op in standard configurations.
      *
      * @param event the individual scenario result
      */
@@ -126,8 +125,7 @@ public final class NotificationService {
             if (channel.supportsScenario(event)) {
                 CompletableFuture.runAsync(() -> channel.sendScenario(event), executor)
                         .exceptionally(t -> {
-                            LOG.warn("Channel {} failed to send scenario event: {}",
-                                    channel.getType(), t.getMessage());
+                            LOG.warn("Channel {} failed to send scenario event: {}", channel.getType(), t.getMessage());
                             return null;
                         });
             }
@@ -160,5 +158,3 @@ public final class NotificationService {
         }
     }
 }
-
-

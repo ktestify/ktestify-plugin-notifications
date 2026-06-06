@@ -75,8 +75,8 @@ class NotificationServiceTest {
 
         @BeforeEach
         void setUp() {
-            NotificationsConfig cfg = NotificationsConfig.from(ConfigFactory.parseString(
-                    "ktestify.plugins.notifications.enabled = true"));
+            NotificationsConfig cfg = NotificationsConfig.from(
+                    ConfigFactory.parseString("ktestify.plugins.notifications.enabled = true"));
             service = new NotificationService(cfg);
         }
 
@@ -134,7 +134,8 @@ class NotificationServiceTest {
         @BeforeEach
         void setUp() {
             // Default reference.conf has enabled = false
-            NotificationsConfig cfg = NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
+            NotificationsConfig cfg =
+                    NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
             assertFalse(cfg.isEnabled(), "pre-condition: plugin should be disabled by default");
             service = new NotificationService(cfg);
         }
@@ -195,4 +196,3 @@ class NotificationServiceTest {
         }
     }
 }
-

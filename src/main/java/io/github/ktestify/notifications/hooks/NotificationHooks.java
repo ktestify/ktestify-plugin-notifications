@@ -119,7 +119,8 @@ public class NotificationHooks {
             GitContext git = CiContextResolver.resolveGit().orElse(null);
 
             SuiteEvent suiteEvent = ScenarioAggregator.buildSuiteEvent(cfg, ci, git);
-            LOG.debug("Suite event built: {} scenarios, successRate={}%",
+            LOG.debug(
+                    "Suite event built: {} scenarios, successRate={}%",
                     suiteEvent.getTotalCount(), suiteEvent.getSuccessRate());
 
             getService().dispatch(suiteEvent);
@@ -142,9 +143,7 @@ public class NotificationHooks {
             synchronized (INIT_LOCK) {
                 if (NOTIFICATION_SERVICE == null) {
                     NotificationsConfig cfg = getConfig();
-                    NOTIFICATION_SERVICE = cfg.isEnabled()
-                            ? new NotificationService(cfg)
-                            : NotificationService.NOOP;
+                    NOTIFICATION_SERVICE = cfg.isEnabled() ? new NotificationService(cfg) : NotificationService.NOOP;
                     LOG.debug("NotificationService initialised (enabled={}).", cfg.isEnabled());
                 }
             }
@@ -156,7 +155,8 @@ public class NotificationHooks {
         if (CACHED_CONFIG == null) {
             synchronized (INIT_LOCK) {
                 if (CACHED_CONFIG == null) {
-                    CACHED_CONFIG = NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
+                    CACHED_CONFIG =
+                            NotificationsConfig.from(KtestifyConfig.getOrLoad().getRaw());
                 }
             }
         }
@@ -173,4 +173,3 @@ public class NotificationHooks {
         CiContextResolver.reset();
     }
 }
-

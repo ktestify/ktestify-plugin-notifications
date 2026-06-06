@@ -52,7 +52,7 @@ public interface NotificationChannel {
      *
      * <p>Must match the {@code type} key in the corresponding {@code ChannelConfig} HOCON block.
      *
-     * @return channel type,  never {@code null} or blank
+     * @return channel type, never {@code null} or blank
      */
     String getType();
 
@@ -81,7 +81,7 @@ public interface NotificationChannel {
      *
      * <p>The default implementation respects the channel's {@code on-failure-only} flag.
      *
-     * @param event      the suite event
+     * @param event the suite event
      * @param onFailureOnly the channel's configured on-failure-only flag
      * @return {@code true} to dispatch, {@code false} to skip
      */
@@ -95,7 +95,7 @@ public interface NotificationChannel {
     /**
      * Returns {@code true} if this channel should handle the given scenario event.
      *
-     * <p>Default: {@code false},  suite-only channels skip scenario events.
+     * <p>Default: {@code false}, suite-only channels skip scenario events.
      *
      * @param event the scenario event
      * @return {@code true} to dispatch, {@code false} to skip
@@ -104,4 +104,3 @@ public interface NotificationChannel {
         return false;
     }
 }
-

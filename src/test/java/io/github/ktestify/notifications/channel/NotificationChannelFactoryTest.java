@@ -170,4 +170,3 @@ class NotificationChannelFactoryTest {
         assertEquals(3, channels.size());
     }
 }
-

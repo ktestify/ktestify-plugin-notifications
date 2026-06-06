@@ -18,14 +18,13 @@ package io.github.ktestify.notifications.channel.impl;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.github.ktestify.notifications.TestFixtures;
-import io.github.ktestify.notifications.model.NotificationStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for Teams, Slack and generic Webhook channels focusing on behaviour that does NOT require a live HTTP
- * endpoint: type identity, support logic, and the no-URL graceful degradation path.
+ * Tests for Teams, Slack and generic Webhook channels focusing on behaviour that does NOT require a live HTTP endpoint:
+ * type identity, support logic, and the no-URL graceful degradation path.
  */
 @DisplayName("HTTP notification channels")
 class HttpChannelsTest {
@@ -69,8 +68,7 @@ class HttpChannelsTest {
         @Test
         @DisplayName("supportsSuite() returns false for PASSED when on-failure-only=true")
         void skipsPassedWhenOnFailureOnly() {
-            var ch = new TeamsNotificationChannel(
-                    TestFixtures.teamsChannelConfig(""), null);
+            var ch = new TeamsNotificationChannel(TestFixtures.teamsChannelConfig(""), null);
             // channel's own on-failure-only = false (from fixture), but we test the method param
             // to cover the branch — create a channel with on-failure-only = true
             var cfgOnFailure = io.github.ktestify.notifications.config.ChannelConfig.from(
@@ -192,4 +190,3 @@ class HttpChannelsTest {
         }
     }
 }
-

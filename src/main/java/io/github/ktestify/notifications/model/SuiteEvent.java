@@ -46,8 +46,8 @@ public class SuiteEvent {
     // ── Outcome ───────────────────────────────────────────────────────────────
 
     /**
-     * Overall suite status. {@link NotificationStatus#FAILED} if any scenario failed;
-     * {@link NotificationStatus#PASSED} otherwise.
+     * Overall suite status. {@link NotificationStatus#FAILED} if any scenario failed; {@link NotificationStatus#PASSED}
+     * otherwise.
      */
     NotificationStatus status;
 
@@ -67,8 +67,8 @@ public class SuiteEvent {
     long durationMs;
 
     /**
-     * Overall success rate as an integer percentage (0–100). Computed as
-     * {@code (passedCount / totalCount) * 100}. 100 when no scenarios ran.
+     * Overall success rate as an integer percentage (0–100). Computed as {@code (passedCount / totalCount) * 100}. 100
+     * when no scenarios ran.
      */
     int successRate;
 
@@ -97,4 +97,3 @@ public class SuiteEvent {
     /** The instant the suite event was built (approximately when the last scenario finished). */
     Instant timestamp;
 }
-

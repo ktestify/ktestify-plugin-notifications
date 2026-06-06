@@ -29,10 +29,10 @@ import lombok.extern.slf4j.Slf4j;
  * <h2>Supported channels</h2>
  *
  * <ul>
- *   <li><b>Teams</b>,  Adaptive Card sent to a Teams Incoming Webhook
- *   <li><b>Slack</b>,  Block Kit payload sent to a Slack Incoming Webhook
- *   <li><b>Webhook</b>,  Generic HTTP POST with a user-defined template
- *   <li><b>Log</b>,  SLF4J logger (always available, zero external dependencies)
+ *   <li><b>Teams</b>, Adaptive Card sent to a Teams Incoming Webhook
+ *   <li><b>Slack</b>, Block Kit payload sent to a Slack Incoming Webhook
+ *   <li><b>Webhook</b>, Generic HTTP POST with a user-defined template
+ *   <li><b>Log</b>, SLF4J logger (always available, zero external dependencies)
  * </ul>
  *
  * <h2>Key features</h2>
@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  *   <li>CI environment auto-detection (GitLab CI, GitHub Actions, CircleCI, Jenkins…)
  *   <li>Configurable success-rate thresholds that drive visual card styling
  *   <li>Fully user-overridable templates via HOCON {@code """..."""} blocks, classpath resources, or file paths
- *   <li>Extensible via Java SPI,  register custom channels in
+ *   <li>Extensible via Java SPI, register custom channels in
  *       {@code META-INF/services/io.github.ktestify.notifications.channel.NotificationChannel}
  * </ul>
  *
@@ -104,8 +104,8 @@ public class NotificationsPlugin implements KtestifyPlugin {
     /**
      * Validates the notifications configuration at startup and logs the active channel summary.
      *
-     * <p>Logs a summary of active channels. When {@code enabled = false} (the default), only an info message is
-     * emitted and the plugin performs no further work.
+     * <p>Logs a summary of active channels. When {@code enabled = false} (the default), only an info message is emitted
+     * and the plugin performs no further work.
      *
      * @param context the plugin context
      */
@@ -131,11 +131,12 @@ public class NotificationsPlugin implements KtestifyPlugin {
                 cfg.isOnFailureOnly());
 
         cfg.getEnabledChannels()
-                .forEach(ch -> log.info("[{}]   • channel: type={}, on-failure-only={}", getId(), ch.getType(), ch.isOnFailureOnly()));
+                .forEach(ch -> log.info(
+                        "[{}]   • channel: type={}, on-failure-only={}", getId(), ch.getType(), ch.isOnFailureOnly()));
     }
 
     /**
-     * No-op,  lifecycle teardown is handled by
+     * No-op, lifecycle teardown is handled by
      * {@link io.github.ktestify.notifications.hooks.NotificationHooks#afterAllScenarios()}.
      */
     @Override
@@ -143,4 +144,3 @@ public class NotificationsPlugin implements KtestifyPlugin {
         log.debug("[{}] Plugin shut down.", getId());
     }
 }
-

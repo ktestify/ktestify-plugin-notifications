@@ -22,9 +22,7 @@ import io.github.ktestify.config.KtestifyConfig;
 import io.github.ktestify.plugin.PluginContext;
 import org.junit.jupiter.api.*;
 
-/**
- * Unit tests for {@link NotificationsPlugin},  lifecycle, metadata, and configuration validation.
- */
+/** Unit tests for {@link NotificationsPlugin}, lifecycle, metadata, and configuration validation. */
 @DisplayName("NotificationsPlugin")
 class NotificationsPluginTest {
 
@@ -86,8 +84,8 @@ class NotificationsPluginTest {
         @Test
         @DisplayName("initialize() succeeds when plugin is enabled with log channel only")
         void initializeSucceedsWhenEnabled() {
-            KtestifyConfig cfg = KtestifyConfig.load(
-                    ConfigFactory.parseString("ktestify.plugins.notifications.enabled = true"));
+            KtestifyConfig cfg =
+                    KtestifyConfig.load(ConfigFactory.parseString("ktestify.plugins.notifications.enabled = true"));
 
             assertDoesNotThrow(() -> plugin.initialize(() -> cfg));
         }
@@ -123,4 +121,3 @@ class NotificationsPluginTest {
         }
     }
 }
-

@@ -124,6 +124,3 @@ public final class CiContextResolver {
         }
     }
 }
-
-
-

@@ -21,8 +21,7 @@ import lombok.Value;
 /**
  * Immutable value object holding Git repository metadata auto-detected at runtime.
  *
- * <p>Populated alongside {@link CiContext} by
- * {@link io.github.ktestify.notifications.service.CiContextResolver}.
+ * <p>Populated alongside {@link CiContext} by {@link io.github.ktestify.notifications.service.CiContextResolver}.
  *
  * @since 1.0.0
  */
@@ -42,4 +41,3 @@ public class GitContext {
     /** Remote URL of the repository. May be {@code null}. */
     String remote;
 }
-

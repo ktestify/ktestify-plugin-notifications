@@ -164,35 +164,31 @@ public final class TestFixtures {
     // ── ChannelConfig builders ────────────────────────────────────────────────
 
     public static ChannelConfig logChannelConfig() {
-        return ChannelConfig.from(ConfigFactory.parseString(
-                "type = \"log\", enabled = true, on-failure-only = false"));
+        return ChannelConfig.from(ConfigFactory.parseString("type = \"log\", enabled = true, on-failure-only = false"));
     }
 
     public static ChannelConfig logChannelOnFailureOnly() {
-        return ChannelConfig.from(ConfigFactory.parseString(
-                "type = \"log\", enabled = true, on-failure-only = true"));
+        return ChannelConfig.from(ConfigFactory.parseString("type = \"log\", enabled = true, on-failure-only = true"));
     }
 
     public static ChannelConfig teamsChannelConfig(String webhookUrl) {
-        return ChannelConfig.from(ConfigFactory.parseString(
-                "type = \"teams\", enabled = true, webhook-url = \"" + webhookUrl + "\""));
+        return ChannelConfig.from(
+                ConfigFactory.parseString("type = \"teams\", enabled = true, webhook-url = \"" + webhookUrl + "\""));
     }
 
     public static ChannelConfig slackChannelConfig(String webhookUrl) {
-        return ChannelConfig.from(ConfigFactory.parseString(
-                "type = \"slack\", enabled = true, webhook-url = \"" + webhookUrl + "\""));
+        return ChannelConfig.from(
+                ConfigFactory.parseString("type = \"slack\", enabled = true, webhook-url = \"" + webhookUrl + "\""));
     }
 
     public static ChannelConfig webhookChannelConfig(String url) {
-        return ChannelConfig.from(ConfigFactory.parseString(String.format(
-                "type = \"webhook\", enabled = true, url = \"%s\", method = \"POST\"", url)));
+        return ChannelConfig.from(ConfigFactory.parseString(
+                String.format("type = \"webhook\", enabled = true, url = \"%s\", method = \"POST\"", url)));
     }
 
     // ── NotificationsConfig builders ─────────────────────────────────────────
 
     public static NotificationsConfig enabledWithLogChannel() {
-        return NotificationsConfig.from(ConfigFactory.parseString(
-                "ktestify.plugins.notifications.enabled = true"));
+        return NotificationsConfig.from(ConfigFactory.parseString("ktestify.plugins.notifications.enabled = true"));
     }
 }
-

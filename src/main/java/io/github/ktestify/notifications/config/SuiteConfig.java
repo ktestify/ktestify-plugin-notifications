@@ -37,4 +37,3 @@ public final class SuiteConfig {
         this.reportUrl = cfg.getString("report-url");
     }
 }
-

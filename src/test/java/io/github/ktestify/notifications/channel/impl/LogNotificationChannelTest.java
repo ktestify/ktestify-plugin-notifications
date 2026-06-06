@@ -29,9 +29,7 @@ import org.junit.jupiter.api.Test;
 class LogNotificationChannelTest {
 
     private LogNotificationChannel channel(boolean onFailureOnly) {
-        ChannelConfig cfg = onFailureOnly
-                ? TestFixtures.logChannelOnFailureOnly()
-                : TestFixtures.logChannelConfig();
+        ChannelConfig cfg = onFailureOnly ? TestFixtures.logChannelOnFailureOnly() : TestFixtures.logChannelConfig();
         return new LogNotificationChannel(cfg);
     }
 
@@ -139,4 +137,3 @@ class LogNotificationChannelTest {
         }
     }
 }
-

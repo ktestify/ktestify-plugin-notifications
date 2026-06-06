@@ -61,9 +61,8 @@ public class TeamsNotificationChannel implements NotificationChannel {
     public TeamsNotificationChannel(ChannelConfig config, NotificationsConfig globalConfig) {
         this.config = config;
         this.globalConfig = globalConfig;
-        this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .build();
+        this.httpClient =
+                HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
     }
 
     @Override
@@ -114,4 +113,3 @@ public class TeamsNotificationChannel implements NotificationChannel {
         return false;
     }
 }
-

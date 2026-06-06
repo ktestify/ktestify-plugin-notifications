@@ -46,11 +46,11 @@ public final class NotificationTemplateResolver {
     /**
      * Resolves the template content for a given channel and slot.
      *
-     * @param configured  the raw value from {@link io.github.ktestify.notifications.config.ChannelConfig}
-     *                    (may be {@code null}, {@code "builtin"}, a classpath ref, a file path, or inline content)
+     * @param configured the raw value from {@link io.github.ktestify.notifications.config.ChannelConfig} (may be
+     *     {@code null}, {@code "builtin"}, a classpath ref, a file path, or inline content)
      * @param channelType the channel type identifier (e.g. {@code "teams"}, {@code "slack"})
-     * @param slot        the template slot ({@code "suite"}, {@code "group"}, {@code "footer"})
-     * @return the resolved template string,  never {@code null}
+     * @param slot the template slot ({@code "suite"}, {@code "group"}, {@code "footer"})
+     * @return the resolved template string, never {@code null}
      */
     public static String resolve(String configured, String channelType, String slot) {
         // 1. Null / blank / "builtin" → bundled default
@@ -65,8 +65,10 @@ public final class NotificationTemplateResolver {
         }
 
         // 3. Inline content — multiline string (from HOCON """), JSON literal, or template with {{variables}}
-        if (configured.contains("\n") || configured.trim().startsWith("{")
-                || configured.trim().startsWith("[") || configured.contains("{{")) {
+        if (configured.contains("\n")
+                || configured.trim().startsWith("{")
+                || configured.trim().startsWith("[")
+                || configured.contains("{{")) {
             return configured;
         }
 
@@ -77,7 +79,8 @@ public final class NotificationTemplateResolver {
     // ── Private helpers ───────────────────────────────────────────────────────
 
     private static String loadClasspath(String resource, String channelType, String slot) {
-        try (InputStream is = NotificationTemplateResolver.class.getClassLoader().getResourceAsStream(resource)) {
+        try (InputStream is =
+                NotificationTemplateResolver.class.getClassLoader().getResourceAsStream(resource)) {
             if (is == null) {
                 LOG.warn("Classpath resource '{}' not found,  falling back to builtin template.", resource);
                 return BuiltinTemplates.get(channelType, slot);
@@ -98,5 +101,3 @@ public final class NotificationTemplateResolver {
         }
     }
 }
-
-

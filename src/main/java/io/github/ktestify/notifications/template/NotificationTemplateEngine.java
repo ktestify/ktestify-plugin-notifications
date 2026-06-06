@@ -36,10 +36,10 @@ import java.util.stream.Collectors;
  *
  * <h2>JSON array injection ({@code {{groupSections}}} and {@code {{footer}}})</h2>
  *
- * <p>{@code {{groupSections}}} is replaced with a comma-joined list of rendered group JSON fragments, each separated
- * by a comma. If non-empty, a trailing comma is appended so the subsequent {@code {{footer}}} element is valid JSON.
- * If there are no groups, {@code {{groupSections}}} is an empty string and {@code {{footer}}} becomes the sole
- * extra element.
+ * <p>{@code {{groupSections}}} is replaced with a comma-joined list of rendered group JSON fragments, each separated by
+ * a comma. If non-empty, a trailing comma is appended so the subsequent {@code {{footer}}} element is valid JSON. If
+ * there are no groups, {@code {{groupSections}}} is an empty string and {@code {{footer}}} becomes the sole extra
+ * element.
  *
  * @since 1.0.0
  */
@@ -53,7 +53,7 @@ public final class NotificationTemplateEngine {
     /**
      * Renders the full HTTP body for a suite event using the given channel configuration.
      *
-     * @param event  the suite event to render
+     * @param event the suite event to render
      * @param config the channel configuration (determines template sources and type)
      * @param globalConfig the root notifications config (for group definitions and thresholds)
      * @return the rendered HTTP payload string
@@ -163,7 +163,7 @@ public final class NotificationTemplateEngine {
      * keys are replaced with an empty string.
      *
      * @param template the template string
-     * @param vars     variable name → value
+     * @param vars variable name → value
      * @return the substituted string
      */
     static String substitute(String template, Map<String, String> vars) {
@@ -186,4 +186,3 @@ public final class NotificationTemplateEngine {
         return (value != null && !value.isBlank()) ? value : "N/A";
     }
 }
-

@@ -58,7 +58,7 @@ public class ScenarioEvent {
     /**
      * Constructs a {@code ScenarioEvent} from the Cucumber {@link Scenario} object and the measured duration.
      *
-     * @param scenario   the scenario provided by the {@code @After} hook
+     * @param scenario the scenario provided by the {@code @After} hook
      * @param durationMs elapsed milliseconds from scenario start to end
      * @return a populated {@code ScenarioEvent}
      */
@@ -97,4 +97,3 @@ public class ScenarioEvent {
         }
     }
 }
-
