@@ -49,7 +49,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-
         <!-- Dependency Versions -->
         <ktestify.version>0.1.0</ktestify.version>
         <cucumber.version>7.34.3</cucumber.version>
@@ -378,4 +377,3 @@
     </profiles>
 
 </project>
-
