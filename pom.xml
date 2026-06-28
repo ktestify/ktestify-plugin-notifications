@@ -50,7 +50,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Dependency Versions -->
-        <ktestify.version>0.1.0</ktestify.version>
+        <ktestify.version>0.1.1</ktestify.version>
         <cucumber.version>7.34.3</cucumber.version>
         <junit.jupiter.version>6.1.0</junit.jupiter.version>
         <lombok.version>1.18.46</lombok.version>
