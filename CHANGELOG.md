@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 
 - Bump org.sonatype.central:central-publishing-maven-plugin *(deps-dev)* — [@dependabot[bot]](https://github.com/dependabot[bot])
 
+- Bump com.diffplug.spotless:spotless-maven-plugin *(deps-dev)* — [@dependabot[bot]](https://github.com/dependabot[bot])
+
 
 ###  New Contributors
 
