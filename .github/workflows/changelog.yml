@@ -12,6 +12,9 @@
 # ============================================================
 name: Changelog
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]
