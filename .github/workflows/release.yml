@@ -24,6 +24,10 @@ on:
         default: false
         type: boolean
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   release:
     uses: ktestify/.github/.github/workflows/reusable-maven-release.yml@main
