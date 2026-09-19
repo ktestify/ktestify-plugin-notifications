@@ -18,6 +18,7 @@ package io.github.ktestify.notifications;
 import io.github.ktestify.notifications.config.NotificationsConfig;
 import io.github.ktestify.plugin.KtestifyPlugin;
 import io.github.ktestify.plugin.PluginContext;
+import io.github.ktestify.plugin.PluginVersionResolver;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -65,8 +66,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NotificationsPlugin implements KtestifyPlugin {
 
+    private static final String PLUGIN_VERSION = PluginVersionResolver.resolve(NotificationsPlugin.class, "dev");
+
     private static final String PLUGIN_ID = "notifications";
-    private static final String VERSION = "1.0-SNAPSHOT";
 
     @Override
     public String getId() {
@@ -75,7 +77,7 @@ public class NotificationsPlugin implements KtestifyPlugin {
 
     @Override
     public String getVersion() {
-        return VERSION;
+        return PLUGIN_VERSION;
     }
 
     @Override
@@ -111,12 +113,12 @@ public class NotificationsPlugin implements KtestifyPlugin {
      */
     @Override
     public void initialize(PluginContext context) {
-        log.info("Initializing {} plugin v{}", getId(), getVersion());
+        log.info("Initializing plugin v{}", getVersion());
 
         NotificationsConfig cfg = NotificationsConfig.from(context.getConfig().getRaw());
 
         if (!cfg.isEnabled()) {
-            log.info("[{}] Notifications disabled. Set KTESTIFY_NOTIFICATIONS_ENABLED=true to activate.", getId());
+            log.info("Notifications disabled. Set KTESTIFY_NOTIFICATIONS_ENABLED=true to activate.");
             return;
         }
 
@@ -124,15 +126,14 @@ public class NotificationsPlugin implements KtestifyPlugin {
         long groupCount = cfg.getGroups().size();
 
         log.info(
-                "[{}] Plugin initialized,  {} channel(s) active, {} tag group(s) configured, on-failure-only={}.",
-                getId(),
+                "Plugin initialized. Found {} channel(s) active, {} tag group(s) configured, on-failure-only={}.",
                 enabledChannels,
                 groupCount,
                 cfg.isOnFailureOnly());
 
         cfg.getEnabledChannels()
                 .forEach(ch -> log.info(
-                        "[{}]   • channel: type={}, on-failure-only={}", getId(), ch.getType(), ch.isOnFailureOnly()));
+                        " channel: type={}, on-failure-only={}", ch.getType(), ch.isOnFailureOnly()));
     }
 
     /**
@@ -141,6 +142,6 @@ public class NotificationsPlugin implements KtestifyPlugin {
      */
     @Override
     public void shutdown() {
-        log.debug("[{}] Plugin shut down.", getId());
+        log.debug("Plugin shut down.");
     }
 }
