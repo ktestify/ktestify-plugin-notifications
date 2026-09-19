@@ -132,8 +132,7 @@ public class NotificationsPlugin implements KtestifyPlugin {
                 cfg.isOnFailureOnly());
 
         cfg.getEnabledChannels()
-                .forEach(ch -> log.info(
-                        " channel: type={}, on-failure-only={}", ch.getType(), ch.isOnFailureOnly()));
+                .forEach(ch -> log.info(" channel: type={}, on-failure-only={}", ch.getType(), ch.isOnFailureOnly()));
     }
 
     /**
