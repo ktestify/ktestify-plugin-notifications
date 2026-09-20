@@ -2,7 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.1.2] — 2026-09-20
+
 ### ✨ Features
 
 - Switched to a parent pom for dependencies management — [@nil-malh](https://github.com/nil-malh)
