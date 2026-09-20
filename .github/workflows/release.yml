@@ -6,6 +6,12 @@
 # ============================================================
 name: Release
 
+permissions:
+  contents: write
+  packages: write
+  pull-requests: read
+  id-token: write
+
 on:
   workflow_dispatch:
     inputs:
@@ -23,10 +29,6 @@ on:
         required: false
         default: false
         type: boolean
-
-permissions:
-  contents: read
-  packages: read
 
 jobs:
   release:
