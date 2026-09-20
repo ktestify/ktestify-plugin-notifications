@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### ✨ Features
+
+- Switched to a parent pom for dependencies management — [@nil-malh](https://github.com/nil-malh)
+
+- Update plugin version handling and improve logging — [@nil-malh](https://github.com/nil-malh)
+
+
+### ⬆️ Dependency Updates
+
+- Bump com.diffplug.spotless:spotless-maven-plugin *(deps-dev)* — [@dependabot[bot]](https://github.com/dependabot[bot])
+
+
 ## [0.1.1] — 2026-07-07
 
 ### ⬆️ Dependency Updates
