@@ -50,25 +50,45 @@ trim = true
 [git]
 conventional_commits   = true
 filter_unconventional  = false
-split_commits          = false
+split_commits          = true
+
+commit_preprocessors = [
+    # Strip the "* " bullet GitHub adds to squash-merge bodies
+    { pattern = '(?m)^\s*\*\s+', replace = "" },
+]
 
 commit_parsers = [
-    { message = "^Merge",                skip = true },
-    { message = "^chore\\(release\\)",   skip = true },
-    { message = "^deps\\(ci\\)",          skip = true },
-    { message = "^style",                skip = true },
-    { message = "^docs\\(changelog\\)",  skip = true },
+    # ── skip noise ──────────────────────────────────────────────────────────
+    { message = "^Merge",                skip = true },   # merge commits
+    { message = "^chore\\(release\\)",   skip = true },   # release bot commits
+    { message = "^deps\\(ci\\)",          skip = true },   # CI-only changes
+    { message = "^style",                skip = true },   # formatting-only
+    { message = "^docs\\(changelog\\)",  skip = true },   # legacy changelog bot commits
+
+    # ── Dependabot / deps ────────────────────────────────────────────────────
+    # Dependabot uses "deps(scope):" with include: "scope", producing commits
+    # like "deps(kafka): bump org.apache.kafka …". Match on "^deps" so all
+    # package-ecosystem updates are captured in one section.
     { message = "^deps",                 group = "⬆️ Dependency Updates" },
+
+    # ── conventional types → sections ───────────────────────────────────────
     { message = "^feat",               group = "✨ Features"       },
-    { message = "^fix",                group = " Bug Fixes"      },
+    { message = "^[Ff]eat/",           group = "✨ Features"       },
+    { message = "^fix",                group = "🐛 Bug Fixes"      },
+    { message = "^[Ff]ix",             group = "🐛 Bug Fixes"      },
     { message = "^perf",               group = "⚡ Performance"    },
     { message = "^refactor",           group = "♻️ Refactoring"    },
-    { message = "^test",               group = " Tests"          },
-    { message = "^doc",                group = " Documentation"  },
+    { message = "^test",               group = "🧪 Tests"          },
+    { message = "^doc",                group = "📖 Documentation"  },
     { message = "^revert",             group = "⏪ Reverts"         },
-    { message = "^chore",              group = " Miscellaneous"  },
+    { message = "^chore",              group = "🔧 Miscellaneous"  },   # catch-all chore
+
+    # ── drop everything else (unrecognised / pure noise) ────────────────────
+    # This catches merge commits that slipped through, "First commit",
+    # "Spotless apply", etc. — anything not matched by a rule above.
     { message = ".*",                  skip = true },
 ]
+
 
 protect_breaking_commits = true
 filter_commits           = false
