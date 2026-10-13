@@ -15,17 +15,18 @@
  */
 package io.github.ktestify.notifications.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.typesafe.config.ConfigFactory;
 import io.github.ktestify.config.KtestifyConfig;
 import io.github.ktestify.notifications.config.NotificationsConfig;
 import io.github.ktestify.notifications.model.NotificationStatus;
 import io.github.ktestify.notifications.model.ScenarioEvent;
 import io.github.ktestify.notifications.model.SuiteEvent;
+import org.junit.jupiter.api.*;
+
 import java.time.Instant;
 import java.util.List;
-import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("ScenarioAggregator")
 class ScenarioAggregatorTest {
@@ -137,7 +138,7 @@ class ScenarioAggregatorTest {
             SuiteEvent event = ScenarioAggregator.buildSuiteEvent(config, null, null);
 
             assertFalse(event.getGroupedResults().isEmpty());
-            assertEquals("untagged", event.getGroupedResults().get(0).getTag());
+            assertEquals("untagged", event.getGroupedResults().getFirst().getTag());
         }
 
         @Test
@@ -180,6 +181,44 @@ class ScenarioAggregatorTest {
             assertEquals(0, event.getTotalCount());
             assertEquals(100, event.getSuccessRate());
             assertEquals(NotificationStatus.PASSED, event.getStatus());
+        }
+    }
+
+    @Nested
+    @DisplayName("multi-tag groups")
+    class MultiTagGroupTests {
+
+        private NotificationsConfig config() {
+            KtestifyConfig.reset();
+            var raw = ConfigFactory.parseString("""
+                            ktestify.plugins.notifications.groups = [
+                              { tags = ["TeamA", "subteamA"], label = "Team A SubteamA" },
+                              { tags = ["TeamB", "subteamB"], label = "Team B SubteamB" },
+                              { tag = "TeamC", label = "Team C" }
+                            ]
+                            """)
+                    .withFallback(KtestifyConfig.getOrLoad().getRaw());
+            return NotificationsConfig.from(raw);
+        }
+
+        @Test
+        @DisplayName("scenario must carry all tags; case and @ are ignored; unmatched is untagged")
+        void andLogic() {
+            ScenarioAggregator.record(scenario("a", NotificationStatus.PASSED, "@TeamA", "@subteamA"));
+            ScenarioAggregator.record(scenario("b", NotificationStatus.FAILED, "@TeamB", "@subteamB"));
+            ScenarioAggregator.record(scenario("c", NotificationStatus.PASSED, "no-tag"));
+            ScenarioAggregator.record(scenario("d", NotificationStatus.PASSED, "@TeamC"));
+
+            SuiteEvent event = ScenarioAggregator.buildSuiteEvent(config(), null, null);
+
+            var groups = event.getGroupedResults();
+            assertEquals(4, groups.size());
+            assertEquals("TeamA+subteamA", groups.get(0).getTag());
+            assertEquals("Team A SubteamA", groups.get(0).getGroupLabel());
+            assertEquals("Team B SubteamB", groups.get(1).getGroupLabel());
+            assertEquals("untagged", groups.get(2).getTag());
+            assertEquals("Team C", groups.get(3).getGroupLabel());
+
         }
     }
 }

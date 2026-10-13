@@ -18,18 +18,10 @@ package io.github.ktestify.notifications.service;
 import io.github.ktestify.notifications.config.NotificationsConfig;
 import io.github.ktestify.notifications.config.TagGroupConfig;
 import io.github.ktestify.notifications.config.ThresholdsConfig;
-import io.github.ktestify.notifications.model.CiContext;
-import io.github.ktestify.notifications.model.GitContext;
-import io.github.ktestify.notifications.model.GroupResult;
-import io.github.ktestify.notifications.model.NotificationStatus;
-import io.github.ktestify.notifications.model.ScenarioEvent;
-import io.github.ktestify.notifications.model.SuiteEvent;
+import io.github.ktestify.notifications.model.*;
+
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Thread-safe static accumulator for {@link ScenarioEvent} instances throughout a test suite run.
@@ -40,9 +32,9 @@ import java.util.Map;
  *
  * <h2>Tag-based grouping logic</h2>
  *
- * <p>Each scenario is matched to the <em>first</em> configured tag group whose {@code tag} appears in the scenario's
- * tag collection (with or without the leading {@code @}). Unmatched scenarios are placed in an automatic
- * {@code "Untagged"} group.
+ * <p>Each scenario is matched to the <em>first</em> configured tag group whose {@code tag} or {@code tags} all appear
+ * in the scenario's tag collection (case-insensitive, with or without the leading {@code @}). Unmatched scenarios are
+ * placed in an automatic {@code "Untagged"} group.
  *
  * @since 1.0.0
  */
@@ -168,20 +160,25 @@ public final class ScenarioAggregator {
     }
 
     /**
-     * Returns the first configured group tag that matches any of the scenario's tags, or {@code "untagged"} if none
-     * match.
+     * Returns the key of the first configured group whose tags are all carried by the scenario, or {@code "untagged"}
+     * if none match. Matching is case-insensitive and ignores a leading {@code @}.
      */
     private static String findMatchingTag(ScenarioEvent event, List<TagGroupConfig> groupDefs) {
+        Set<String> scenarioTags = new HashSet<>();
+        for (String t : event.getTags()) {
+            scenarioTags.add(normalise(t));
+        }
         for (TagGroupConfig def : groupDefs) {
-            String tagWithAt = "@" + def.getTag();
-            String tagWithout = def.getTag();
-            for (String scenarioTag : event.getTags()) {
-                if (scenarioTag.equalsIgnoreCase(tagWithAt) || scenarioTag.equalsIgnoreCase(tagWithout)) {
-                    return def.getTag();
-                }
+            if (def.getTags().stream().map(ScenarioAggregator::normalise).allMatch(scenarioTags::contains)) {
+                return def.getTag();
             }
         }
         return "untagged";
+    }
+
+    private static String normalise(String tag) {
+        String t = tag.startsWith("@") ? tag.substring(1) : tag;
+        return t.toLowerCase(Locale.ROOT);
     }
 
     private static TagGroupConfig findGroupDef(String tag, List<TagGroupConfig> defs) {

@@ -16,7 +16,10 @@
 package io.github.ktestify.notifications.config;
 
 import com.typesafe.config.Config;
+import io.github.ktestify.exceptions.ConfigException;
 import lombok.Getter;
+
+import java.util.List;
 
 /**
  * Configuration for one tag-based scenario group.
@@ -28,16 +31,23 @@ import lombok.Getter;
  * <pre>
  * groups = [
  *   { tag = "orders",   label = "Order Service",   emoji = "📦" },
- *   { tag = "payments", label = "Payment Service", emoji = "💳" }
+ *   { tag = "payments", label = "Payment Service", emoji = "💳" },
+ *   { tags = ["Intrazone", "NA"], label = "Intrazone NA", emoji = "🚛" }
  * ]
  * </pre>
+ *
+ * <p>A group declares either {@code tag} (single tag) or {@code tags} (a scenario must carry all of them). {@code tag =
+ * "x"} is equivalent to {@code tags = ["x"]}. If both are present, {@code tags} wins.
  *
  * @since 1.0.0
  */
 @Getter
 public final class TagGroupConfig {
 
-    /** Cucumber tag to match (without the {@code @} prefix). */
+    /** Cucumber tags that must all be present on a scenario (without the {@code @} prefix). */
+    private final List<String> tags;
+
+    /** Identifier of the group: the tags joined with {@code +}, e.g. {@code "Intrazone+NA"}. */
     private final String tag;
 
     /** Display label used in the notification card. */
@@ -47,7 +57,21 @@ public final class TagGroupConfig {
     private final String emoji;
 
     private TagGroupConfig(Config cfg) {
-        this.tag = cfg.getString("tag");
+        List<String> parsed;
+        if (cfg.hasPath("tags")) {
+            parsed = cfg.getStringList("tags").stream()
+                    .map(String::trim)
+                    .map(t -> t.startsWith("@") ? t.substring(1) : t)
+                    .filter(t -> !t.isEmpty())
+                    .toList();
+        } else {
+            parsed = List.of(cfg.getString("tag"));
+        }
+        if (parsed.isEmpty()) {
+            throw new ConfigException("Notification group must define a non-empty 'tag' or 'tags': " + cfg);
+        }
+        this.tags = parsed;
+        this.tag = String.join("+", parsed);
         this.label = cfg.hasPath("label") ? cfg.getString("label") : tag;
         this.emoji = cfg.hasPath("emoji") ? cfg.getString("emoji") : "🏷️";
     }
