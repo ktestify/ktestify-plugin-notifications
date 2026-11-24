@@ -2,7 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.1.5] — 2026-11-24
+
 ### ⬆️ Dependency Updates
 
 - Bump io.github.ktestify:ktestify-core from 1.2.3 to 1.2.9 *(deps)* — [@dependabot[bot]](https://github.com/dependabot[bot])
